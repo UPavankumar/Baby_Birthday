@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💖💝Only Baby Girl😘😍</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="portfolio-header">
+        <h1>✨ Baby's Birthday ✨</h1>
+    </div>
+
+    <div class="gallery-container">
+        <div class="masonry-grid" id="gallery">
+            <!-- Artworks will be generated here -->
+        </div>
+    </div>
+
+    <button class="celebrate-btn" onclick="launchFireworks()">🎆 CELEBRATE</button>
+
+    <!-- Modal for fullscreen view -->
+    <div id="modal" class="modal" onclick="closeModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <span class="modal-close" onclick="closeModal()">&times;</span>
+            <img id="modal-image" class="modal-image" src="" alt="Artwork">
+        </div>
+    </div>
+
+    <!-- Fireworks Canvas -->
+    <canvas id="fireworks-canvas"></canvas>
+
+    <script src="script.js"></script>
+</body>
+</html>
