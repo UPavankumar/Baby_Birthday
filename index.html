@@ -3,34 +3,913 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💖</text></svg>">
-    <title>Only Baby Girl😘😍</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎂</text></svg>">
+    <title>Birthday Gallery ✨</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #000;
+            min-height: 100vh;
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+        }
+
+        .header {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(20, 20, 20, 0.9);
+            backdrop-filter: blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #fff, #ffd4e5, #d4e5ff, #fff);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmer 3s ease-in-out infinite;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            font-weight: 300;
+            color: #ccc;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .gallery-container {
+            padding: 30px 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .gallery-masonry {
+            column-count: 4;
+            column-gap: 20px;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @media (max-width: 1200px) {
+            .gallery-masonry {
+                column-count: 3;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .gallery-masonry {
+                column-count: 2;
+                column-gap: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .gallery-masonry {
+                column-count: 1;
+                column-gap: 10px;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .photo-card {
+            break-inside: avoid;
+            margin-bottom: 20px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: fadeInUp 0.6s ease-out backwards;
+        }
+
+        .photo-card:nth-child(even) {
+            animation-delay: 0.1s;
+        }
+
+        .photo-card:nth-child(odd) {
+            animation-delay: 0.2s;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .photo-card:hover {
+            transform: scale(1.02);
+            z-index: 10;
+        }
+
+        .photo-card img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 15px;
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .photo-card:hover img {
+            filter: brightness(1.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .photo-overlay {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            right: 15px;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+            padding: 15px;
+            border-radius: 10px;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .photo-card:hover .photo-overlay {
+            transform: translateY(0);
+        }
+
+        .photo-number {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            font-weight: 500;
+            color: #fff;
+        }
+
+        .action-buttons {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border: none;
+            padding: 15px 25px;
+            border-radius: 50px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3) !important;
+        }
+
+        .fullscreen-modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.98);
+            backdrop-filter: blur(20px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .fullscreen-modal.show {
+            opacity: 1;
+        }
+
+        .fullscreen-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transform: scale(0.8);
+            transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .fullscreen-modal.show .fullscreen-content {
+            transform: scale(1);
+        }
+
+        .fullscreen-image {
+            max-width: 100%;
+            max-height: 95vh;
+            width: auto;
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8);
+        }
+
+        .fullscreen-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: #fff;
+            font-size: 40px;
+            font-weight: 300;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(0, 0, 0, 0.7);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10001;
+        }
+
+        .fullscreen-close:hover {
+            background: rgba(255, 107, 107, 0.8);
+            transform: rotate(90deg);
+        }
+
+        #fireworks-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9998;
+            background: transparent;
+        }
+
+        .fireworks-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 9997;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .fireworks-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .fireworks-controls {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10000;
+        }
+
+        .loading-placeholder {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.05) 100%);
+            background-size: 200% 100%;
+            animation: loading 1.5s ease-in-out infinite;
+            border-radius: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #ff6b6b;
+            z-index: 9999;
+            animation: confetti-fall 3s linear forwards;
+            pointer-events: none;
+        }
+
+        @keyframes confetti-fall {
+            to {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 30px 15px;
+            }
+            
+            .header h1 { 
+                font-size: 2rem; 
+            }
+            
+            .header p { 
+                font-size: 1rem; 
+            }
+            
+            .gallery-container {
+                padding: 20px 15px;
+            }
+            
+            .action-buttons { 
+                bottom: 20px; 
+                right: 20px; 
+            }
+            
+            .btn { 
+                padding: 12px 20px; 
+                font-size: 14px; 
+            }
+            
+            .fullscreen-close {
+                top: 10px;
+                right: 10px;
+                width: 40px;
+                height: 40px;
+                font-size: 30px;
+            }
+
+            .photo-card {
+                margin-bottom: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 { 
+                font-size: 1.5rem; 
+            }
+            
+            .action-buttons {
+                bottom: 15px;
+                right: 15px;
+            }
+            
+            .btn {
+                padding: 10px 15px;
+                font-size: 12px;
+            }
+
+            .photo-card {
+                margin-bottom: 10px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="portfolio-header">
-        <h1>✨ Baby's Birthday ✨</h1>
+    <div class="fireworks-overlay" id="fireworks-overlay">
+        <div class="fireworks-controls">
+            <button class="btn" id="fireworks-celebrate-btn" onclick="launchMoreFireworks()">
+                🎆 More Fireworks
+            </button>
+        </div>
     </div>
+    
+    <div class="container" id="main-container">
+        <div class="header">
+            <h1>🎉 Happy Birthday! 🎂</h1>
+            <p>A collection of beautiful memories</p>
+        </div>
 
-    <div class="gallery-container">
-        <div class="masonry-grid" id="gallery">
-            <!-- Artworks will be generated here -->
+        <div class="gallery-container">
+            <div class="gallery-masonry" id="gallery">
+                <!-- Gallery items will be generated here -->
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn" id="celebrate-btn" onclick="celebrate()">
+                🎆 Celebrate
+            </button>
         </div>
     </div>
 
-    <button class="celebrate-btn" onclick="launchFireworks()">🎆 CELEBRATE</button>
-
-    <!-- Modal for fullscreen view -->
-    <div id="modal" class="modal" onclick="closeModal()">
-        <div class="modal-content" onclick="event.stopPropagation()">
-            <span class="modal-close" onclick="closeModal()">&times;</span>
-            <img id="modal-image" class="modal-image" src="" alt="Artwork">
+    <!-- Fullscreen Modal -->
+    <div id="fullscreen-modal" class="fullscreen-modal" onclick="closeFullscreen(event)">
+        <div class="fullscreen-content" onclick="event.stopPropagation()">
+            <span class="fullscreen-close" onclick="closeFullscreen()">&times;</span>
+            <img id="fullscreen-image" class="fullscreen-image" src="" alt="Gallery Image">
         </div>
     </div>
 
     <!-- Fireworks Canvas -->
     <canvas id="fireworks-canvas"></canvas>
 
-    <script src="script.js"></script>
+    <script>
+        // Gallery state
+        let totalImages = 40;
+        let imagesLoaded = [];
+        let fireworksActive = false;
+        let fireworksTimer = null;
+
+        // Generate gallery items with masonry layout
+        function generateGallery() {
+            const gallery = document.getElementById('gallery');
+            gallery.innerHTML = '';
+            
+            for (let i = 1; i <= totalImages; i++) {
+                const card = document.createElement('div');
+                card.className = 'photo-card';
+                card.style.animationDelay = `${(i % 10) * 0.1}s`;
+                
+                const imgPath = `imgs/${i}.JPG`;
+                
+                card.innerHTML = `
+                    <div class="loading-placeholder"></div>
+                    <img src="${imgPath}" alt="Photo ${i}" style="display: none;" 
+                         onload="this.style.display='block'; this.previousElementSibling.style.display='none'; this.parentElement.dataset.loaded='true';"
+                         onerror="this.parentElement.style.display='none';">
+                    <div class="photo-overlay">
+                        <div class="photo-number">Photo ${i}</div>
+                    </div>
+                `;
+                
+                card.onclick = () => {
+                    if (!fireworksActive) {
+                        openFullscreen(imgPath);
+                    }
+                };
+                gallery.appendChild(card);
+                imagesLoaded.push(imgPath);
+            }
+        }
+
+        // Fullscreen functionality
+        function openFullscreen(imageSrc) {
+            const modal = document.getElementById('fullscreen-modal');
+            const fullscreenImage = document.getElementById('fullscreen-image');
+            
+            fullscreenImage.src = imageSrc;
+            modal.style.display = 'block';
+            
+            setTimeout(() => {
+                modal.classList.add('show');
+            }, 10);
+        }
+
+        function closeFullscreen(event) {
+            if (event && event.target !== event.currentTarget && !event.target.classList.contains('fullscreen-close')) {
+                return;
+            }
+            
+            const modal = document.getElementById('fullscreen-modal');
+            modal.classList.remove('show');
+            
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 300);
+        }
+
+        // Enhanced Straight-up Fireworks System
+        class Firework {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.startY = y;
+                this.targetY = Math.random() * window.innerHeight * 0.3 + 50; // Upper portion of screen
+                this.coordinates = [];
+                this.coordinateCount = 12;
+                
+                while (this.coordinateCount--) {
+                    this.coordinates.push([this.x, this.y]);
+                }
+                
+                this.speed = Math.random() * 3 + 6; // Faster speed
+                this.acceleration = 0.98; // Slight deceleration as it goes up
+                this.brightness = Math.random() * 50 + 50;
+                const colors = [0, 30, 60, 120, 180, 240, 280, 320];
+                this.hue = colors[Math.floor(Math.random() * colors.length)];
+                this.exploded = false;
+            }
+
+            update(index) {
+                this.coordinates.pop();
+                this.coordinates.unshift([this.x, this.y]);
+                
+                this.speed *= this.acceleration;
+                this.y -= this.speed;
+                
+                // Explode when it reaches target height or speed gets too slow
+                if (this.y <= this.targetY || this.speed <= 1) {
+                    if (!this.exploded) {
+                        this.exploded = true;
+                        createParticles(this.x, this.y, this.hue);
+                    }
+                    fireworks.splice(index, 1);
+                }
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.moveTo(this.coordinates[this.coordinates.length - 1][0], 
+                          this.coordinates[this.coordinates.length - 1][1]);
+                ctx.lineTo(this.x, this.y);
+                ctx.strokeStyle = `hsl(${this.hue}, 100%, ${this.brightness}%)`;
+                ctx.lineWidth = 4;
+                ctx.stroke();
+                
+                // Glowing trail effect
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, 6, 0, Math.PI * 2);
+                ctx.fillStyle = `hsl(${this.hue}, 100%, 80%)`;
+                ctx.fill();
+                
+                // Extra glow
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, 10, 0, Math.PI * 2);
+                ctx.fillStyle = `hsla(${this.hue}, 100%, 60%, 0.3)`;
+                ctx.fill();
+            }
+        }
+
+        class Particle {
+            constructor(x, y, hue) {
+                this.x = x;
+                this.y = y;
+                this.coordinates = [];
+                this.coordinateCount = 10;
+                
+                while (this.coordinateCount--) {
+                    this.coordinates.push([this.x, this.y]);
+                }
+                
+                this.angle = Math.random() * Math.PI * 2;
+                this.speed = Math.random() * 20 + 5; // More explosive
+                this.friction = 0.94; // Slower friction for longer trails
+                this.gravity = 0.8;
+                this.hue = Math.random() * 60 + hue;
+                this.brightness = Math.random() * 50 + 50;
+                this.alpha = 1;
+                this.decay = Math.random() * 0.015 + 0.005; // Slower decay
+                this.size = Math.random() * 6 + 3; // Bigger particles
+                this.sparkle = Math.random() > 0.5;
+                this.twinkle = Math.random() > 0.7;
+            }
+
+            update(index) {
+                this.coordinates.pop();
+                this.coordinates.unshift([this.x, this.y]);
+                this.speed *= this.friction;
+                this.x += Math.cos(this.angle) * this.speed;
+                this.y += Math.sin(this.angle) * this.speed + this.gravity;
+                this.alpha -= this.decay;
+                
+                if (this.sparkle) {
+                    this.brightness = Math.random() * 50 + 50;
+                }
+                
+                if (this.twinkle) {
+                    this.size = Math.random() * 4 + 2;
+                }
+                
+                if (this.alpha <= this.decay) {
+                    particles.splice(index, 1);
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                
+                // Draw longer, more colorful trail
+                ctx.beginPath();
+                ctx.moveTo(this.coordinates[this.coordinates.length - 1][0], 
+                          this.coordinates[this.coordinates.length - 1][1]);
+                ctx.lineTo(this.x, this.y);
+                ctx.strokeStyle = `hsl(${this.hue}, 100%, ${this.brightness}%)`;
+                ctx.lineWidth = this.size;
+                ctx.stroke();
+                
+                // Enhanced glow effect
+                if (this.sparkle) {
+                    ctx.shadowBlur = 30;
+                    ctx.shadowColor = `hsl(${this.hue}, 100%, ${this.brightness}%)`;
+                }
+                
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = `hsl(${this.hue}, 100%, ${this.brightness}%)`;
+                ctx.fill();
+                
+                // Extra sparkle rings
+                if (this.sparkle) {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size * 3, 0, Math.PI * 2);
+                    ctx.fillStyle = `hsla(${this.hue}, 100%, 100%, 0.2)`;
+                    ctx.fill();
+                    
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size * 5, 0, Math.PI * 2);
+                    ctx.fillStyle = `hsla(${this.hue}, 100%, 80%, 0.1)`;
+                    ctx.fill();
+                }
+                
+                ctx.restore();
+            }
+        }
+
+        let canvas, ctx;
+        let fireworks = [];
+        let particles = [];
+        let animationId;
+
+        function initCanvas() {
+            canvas = document.getElementById('fireworks-canvas');
+            ctx = canvas.getContext('2d');
+            
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+        }
+
+        function createParticles(x, y, hue) {
+            // Create massive explosion of particles
+            let particleCount = 120; // More particles
+            while (particleCount--) {
+                particles.push(new Particle(x, y, hue));
+            }
+            
+            // Create multiple rings
+            for (let ring = 0; ring < 3; ring++) {
+                for (let i = 0; i < 40; i++) {
+                    const angle = (Math.PI * 2 / 40) * i;
+                    const p = new Particle(x, y, hue);
+                    p.angle = angle;
+                    p.speed = 15 + ring * 5; // Different ring speeds
+                    particles.push(p);
+                }
+            }
+        }
+
+        function celebrate() {
+            if (fireworksActive) return;
+            
+            fireworksActive = true;
+            
+            // Show black overlay
+            const overlay = document.getElementById('fireworks-overlay');
+            overlay.classList.add('active');
+            
+            // Disable all interactions
+            disableInteractions();
+            
+            // Close fullscreen if open
+            const fullscreenModal = document.getElementById('fullscreen-modal');
+            if (fullscreenModal.classList.contains('show')) {
+                fullscreenModal.classList.remove('show');
+                setTimeout(() => {
+                    fullscreenModal.style.display = 'none';
+                }, 300);
+            }
+            
+            // Start continuous fireworks show
+            startFireworksShow();
+        }
+
+        function startFireworksShow() {
+            // Launch initial burst
+            launchFireworksBurst();
+            
+            // Continue launching fireworks at random intervals
+            fireworksTimer = setInterval(() => {
+                if (Math.random() > 0.3) { // 70% chance each interval
+                    launchRandomFireworks();
+                }
+            }, 800 + Math.random() * 1200); // Random intervals between 800ms-2000ms
+            
+            if (!animationId) {
+                animateFireworks();
+            }
+        }
+
+        function launchFireworksBurst() {
+            const burstCount = 6 + Math.floor(Math.random() * 4); // 6-9 fireworks
+            
+            for (let i = 0; i < burstCount; i++) {
+                setTimeout(() => {
+                    launchSingleFirework();
+                }, i * (100 + Math.random() * 200)); // Staggered launch
+            }
+        }
+
+        function launchRandomFireworks() {
+            const randomCount = 1 + Math.floor(Math.random() * 3); // 1-3 fireworks
+            
+            for (let i = 0; i < randomCount; i++) {
+                setTimeout(() => {
+                    launchSingleFirework();
+                }, i * 150);
+            }
+        }
+
+        function launchMoreFireworks() {
+            // Launch extra fireworks when button is pressed
+            launchFireworksBurst();
+            createConfetti();
+        }
+
+        function launchSingleFirework() {
+            const startX = Math.random() * (canvas.width - 100) + 50; // Keep away from edges
+            const startY = canvas.height;
+            
+            fireworks.push(new Firework(startX, startY));
+        }
+
+        function disableInteractions() {
+            const photoCards = document.querySelectorAll('.photo-card');
+            const celebrateBtn = document.getElementById('celebrate-btn');
+            
+            photoCards.forEach(card => card.style.pointerEvents = 'none');
+            celebrateBtn.disabled = true;
+        }
+
+        function enableInteractions() {
+            const photoCards = document.querySelectorAll('.photo-card');
+            const celebrateBtn = document.getElementById('celebrate-btn');
+            
+            photoCards.forEach(card => card.style.pointerEvents = 'auto');
+            celebrateBtn.disabled = false;
+        }
+
+        function animateFireworks() {
+            ctx.globalCompositeOperation = 'destination-out';
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.15)'; // Lighter fade for longer trails
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.globalCompositeOperation = 'lighter';
+            
+            let i = fireworks.length;
+            while (i--) {
+                fireworks[i].draw();
+                fireworks[i].update(i);
+            }
+            
+            let j = particles.length;
+            while (j--) {
+                particles[j].draw();
+                particles[j].update(j);
+            }
+            
+            if (fireworksActive) {
+                animationId = requestAnimationFrame(animateFireworks);
+            } else {
+                animationId = null;
+                // Fade out remaining particles
+                let fadeCount = 0;
+                const maxFade = 100;
+                const fadeInterval = setInterval(() => {
+                    ctx.globalCompositeOperation = 'destination-out';
+                    ctx.fillStyle = `rgba(0, 0, 0, 0.05)`;
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    fadeCount++;
+                    
+                    if (fadeCount >= maxFade || (fireworks.length === 0 && particles.length === 0)) {
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                        clearInterval(fadeInterval);
+                    }
+                }, 50);
+            }
+        }
+
+        function endFireworks() {
+            fireworksActive = false;
+            
+            if (fireworksTimer) {
+                clearInterval(fireworksTimer);
+                fireworksTimer = null;
+            }
+            
+            // Hide overlay after delay to let remaining fireworks finish
+            setTimeout(() => {
+                const overlay = document.getElementById('fireworks-overlay');
+                overlay.classList.remove('active');
+                enableInteractions();
+            }, 3000);
+        }
+
+        function createConfetti() {
+            const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffd93d', '#ff6ec7', '#a29bfe', '#fd79a8', '#ff9f43', '#00d2d3'];
+            
+            for (let i = 0; i < 150; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * window.innerWidth + 'px';
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.animationDuration = (Math.random() * 4 + 3) + 's';
+                    confetti.style.width = (Math.random() * 12 + 6) + 'px';
+                    confetti.style.height = confetti.style.width;
+                    confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => confetti.remove(), 8000);
+                }, i * 30);
+            }
+        }
+
+        // Auto-end fireworks after reasonable time
+        setTimeout(() => {
+            if (fireworksActive) {
+                endFireworks();
+            }
+        }, 30000); // 30 seconds of fireworks
+
+        // Keyboard controls
+        document.addEventListener('keydown', (e) => {
+            if (fireworksActive) {
+                if (e.code === 'Space') {
+                    e.preventDefault();
+                    launchMoreFireworks();
+                } else if (e.key === 'Escape') {
+                    endFireworks();
+                }
+                return;
+            }
+            
+            const fullscreenModal = document.getElementById('fullscreen-modal');
+            
+            if (fullscreenModal.classList.contains('show')) {
+                if (e.key === 'Escape') {
+                    closeFullscreen();
+                }
+            } else {
+                if (e.code === 'Space') {
+                    e.preventDefault();
+                    celebrate();
+                }
+            }
+        });
+
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', () => {
+            generateGallery();
+            initCanvas();
+        });
+    </script>
 </body>
 </html>
