@@ -102,6 +102,17 @@
                 canvas.height = window.innerHeight;
             };
 
+            const getRandomStartX = () => {
+                // Avoid the middle 20% of the screen for a wider display
+                if (Math.random() < 0.5) {
+                    // Launch on the left side (10% to 40% of width)
+                    return (Math.random() * 0.3 + 0.1) * canvas.width;
+                } else {
+                    // Launch on the right side (60% to 90% of width)
+                    return (Math.random() * 0.3 + 0.6) * canvas.width;
+                }
+            };
+
             class Particle {
                 constructor(x, y, hue) {
                     this.x = x;
@@ -111,7 +122,11 @@
                     this.speed = Math.random() * 25 + 5;
                     this.friction = 0.94;
                     this.gravity = Math.random() * 0.4 + 0.6; // Randomized gravity
-                    this.hue = (hue + (Math.random() * 100 - 50) + 360) % 360; // Wider, more vibrant color spread
+                    if (hue === null) { // For rainbow bursts
+                        this.hue = Math.random() * 360;
+                    } else {
+                        this.hue = (hue + (Math.random() * 120 - 60) + 360) % 360; // Wider, more vibrant color spread
+                    }
                     this.brightness = Math.random() * 35 + 50; // Clamp brightness to 50-85% to reduce whiteout
                     this.alpha = 1;
                     this.decay = Math.random() * 0.02 + 0.008; // Randomized decay
@@ -186,11 +201,10 @@
                 }
             }
             
-            const launchFireworksBurst = (count = 5) => {
-                const burstCount = count + Math.floor(Math.random() * 3);
-                for (let i = 0; i < burstCount; i++) {
+            const launchFireworksBurst = (count = 1) => {
+                for (let i = 0; i < count; i++) {
                     setTimeout(() => {
-                        const startX = Math.random() * (canvas.width * 0.8) + (canvas.width * 0.1);
+                        const startX = getRandomStartX();
                         const targetY = Math.random() * (canvas.height * 0.2) + (canvas.height * 0.1);
                         fireworks.push(new Firework(startX, canvas.height, targetY));
                     }, i * (150 + Math.random() * 150));
@@ -208,9 +222,10 @@
                     firework.update();
                     firework.draw();
                     if (firework.y <= firework.targetY || firework.speed <= 1) {
-                        let particleCount = 80 + Math.floor(Math.random() * 120); // Randomized explosion size
+                        let particleCount = 80 + Math.floor(Math.random() * 120);
+                        const isRainbow = Math.random() < 0.15; // 15% chance for a rainbow burst
                         while (particleCount--) {
-                            particles.push(new Particle(firework.x, firework.y, firework.hue));
+                            particles.push(new Particle(firework.x, firework.y, isRainbow ? null : firework.hue));
                         }
                         return false;
                     }
@@ -267,7 +282,7 @@
                         const count = 1 + Math.floor(Math.random() * 3);
                          for (let i = 0; i < count; i++) {
                             setTimeout(() => {
-                                const startX = Math.random() * (canvas.width * 0.8) + (canvas.width * 0.1);
+                                const startX = getRandomStartX();
                                 const targetY = Math.random() * (canvas.height * 0.2) + (canvas.height * 0.1);
                                 fireworks.push(new Firework(startX, canvas.height, targetY));
                             }, i * 250);
@@ -278,11 +293,15 @@
 
             // Event Listeners
             window.addEventListener('resize', resizeCanvas);
-            document.getElementById('more-fireworks-btn').addEventListener('click', () => launchFireworksBurst(5));
+            document.getElementById('more-fireworks-btn').addEventListener('click', () => {
+                const count = 1 + Math.floor(Math.random() * 2); // 1 or 2
+                launchFireworksBurst(count);
+            });
             document.addEventListener('keydown', (e) => {
                 if (e.code === 'Space') {
                     e.preventDefault();
-                    launchFireworksBurst(5);
+                    const count = 1 + Math.floor(Math.random() * 2); // 1 or 2
+                    launchFireworksBurst(count);
                 }
             });
 
