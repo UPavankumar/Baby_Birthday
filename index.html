@@ -1,453 +1,110 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Birthday Gallery ✨</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎂</text></svg>">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>For my baby ✨</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💖</text></svg>">
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        :root {
-            --ease-out-cubic: cubic-bezier(0.215, 0.610, 0.355, 1);
-            --ease-out-back: cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            background: #000;
-            color: #fff;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            overflow-x: hidden;
+            cursor: default;
         }
 
-        .container {
-            position: relative;
-            z-index: 2;
-            transition: opacity 0.5s var(--ease-out-cubic);
+        #text-container {
+            transition: transform 0.1s ease-out;
+            will-change: transform;
         }
-
-        .container.fireworks-active {
-            pointer-events: none;
-        }
-
-        /* Header */
-        .header {
-            text-align: center;
-            padding: 40px 20px;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            position: sticky;
-            top: 0;
-            z-index: 40;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .header h1 {
-            font-size: 3rem;
-            font-weight: 700;
-            margin-bottom: 10px;
-            background: linear-gradient(45deg, #fff, #ffd4e5, #d4e5ff, #fff);
+        
+        .text-gradient {
+            background: linear-gradient(45deg, #f87171, #fb923c, #facc15, #4ade80, #60a5fa, #c084fc, #f87171);
             background-size: 200% 200%;
             -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
             background-clip: text;
-            text-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
-            animation: shimmer 3s ease-in-out infinite;
+            color: transparent;
+            animation: gradient-animation 10s ease infinite;
         }
 
-        .header p {
-            font-size: 1.2rem;
-            opacity: 0.9;
-            font-weight: 300;
-            color: #ccc;
-        }
-
-        @keyframes shimmer {
-            0%, 100% { background-position: 0% 50%; }
+        @keyframes gradient-animation {
+            0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
-        /* Gallery */
-        .gallery-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 30px 20px;
-        }
-
-        .gallery-masonry {
-            column-count: 2;
-            column-gap: 20px;
-        }
-
-        @media (min-width: 768px) { .gallery-masonry { column-count: 3; } }
-        @media (min-width: 1024px) { .gallery-masonry { column-count: 4; } }
-        @media (min-width: 1280px) { .gallery-masonry { column-count: 5; } }
-
-
-        .photo-card {
-            break-inside: avoid;
-            margin-bottom: 20px;
-            position: relative;
+        #text-container span {
+            display: inline-block;
             cursor: pointer;
-            transition: all 0.4s var(--ease-out-back);
-            opacity: 0;
-            animation: fade-in-up 0.6s ease-out forwards;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.3s ease, text-shadow 0.3s ease;
+            will-change: transform, color, text-shadow;
         }
 
-        @keyframes fade-in-up {
-            from { opacity: 0; transform: translateY(20px) scale(0.95); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-        
-        .photo-card:hover {
-            transform: scale(1.02);
-            z-index: 10;
-        }
-
-        .photo-card .loading-placeholder {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 16px;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .photo-card img {
-            width: 100%;
-            height: auto;
-            display: block;
-            border-radius: 16px;
-            transition: all 0.4s ease;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            border: 2px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .photo-card:hover img {
-            filter: brightness(1.1);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
-            border-color: rgba(255, 255, 255, 0.3);
-        }
-
-        /* Action Buttons */
-        .action-buttons {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            z-index: 50;
-        }
-
-        .btn {
-            border: none;
-            padding: 15px 25px;
-            border-radius: 50px;
-            color: white;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
-        }
-        
-        .btn:active {
-            transform: translateY(0) scale(0.98);
-        }
-
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none !important;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3) !important;
-        }
-
-        #celebrate-btn {
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
-        }
-
-        /* Fullscreen Modal */
-        .fullscreen-modal {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: fixed;
-            z-index: 9999;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            opacity: 0;
-            transition: opacity 0.3s ease-in-out;
-            pointer-events: none;
-        }
-        
-        .fullscreen-modal.show {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .fullscreen-content {
-            position: relative;
-            transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            transform: scale(0.75);
-        }
-        
-        .fullscreen-modal.show .fullscreen-content {
-            transform: scale(1);
-        }
-
-        .fullscreen-image {
-            max-width: 95vw;
-            max-height: 95vh;
-            width: auto;
-            height: auto;
-            border-radius: 16px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8);
-        }
-
-        .fullscreen-close {
-            position: absolute;
-            top: -12px;
-            right: -12px;
+        #text-container span:hover {
+            transform: translateY(-8px) scale(1.1);
             color: #fff;
-            font-size: 30px;
-            font-weight: 200;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background: rgba(0, 0, 0, 0.7);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.8), 0 0 25px rgba(255, 255, 255, 0.6);
         }
 
-        .fullscreen-close:hover {
-            background: rgba(255, 107, 107, 0.8);
-            transform: rotate(90deg);
-        }
-        
-        /* Fireworks Overlay */
-        .fireworks-overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 9990;
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out;
-            pointer-events: none;
-            background: #000;
-        }
-        
-        .fireworks-overlay.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-        
-        #fireworks-canvas {
-            position: absolute;
-            inset: 0;
-            z-index: 9998;
-        }
-        
-        .fireworks-controls {
-            position: absolute;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 10000;
-            display: flex;
-            gap: 1rem;
-        }
-        
-        .fireworks-controls .btn {
-            font-size: 14px;
-            padding: 12px 20px;
-        }
-        
-        #more-fireworks-btn {
-            background: linear-gradient(45deg, #8e44ad, #e94e77);
-        }
-        
-        #end-show-btn {
-            background: rgba(50, 50, 50, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        
-        /* Responsive adjustments */
+        /* Mobile specific styles */
         @media (max-width: 768px) {
-            .header { padding: 30px 15px; }
-            .header h1 { font-size: 2rem; }
-            .header p { font-size: 1rem; }
-            .gallery-container { padding: 20px 15px; }
-            .gallery-masonry { column-gap: 15px; }
-            .photo-card { margin-bottom: 15px; }
-            .action-buttons { bottom: 20px; right: 20px; }
-            .btn { padding: 12px 20px; font-size: 14px; }
-            .fullscreen-close { top: -8px; right: -8px; width: 36px; height: 36px; font-size: 26px; }
+            #text-container {
+                /* Center text on mobile */
+                top: 5rem;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 90%;
+                text-align: center;
+                transition: none;
+            }
         }
     </style>
 </head>
-<body>
-    <div class="container" id="main-container">
-        <header class="header">
-            <h1>🎉 Happy Birthday! 🎂</h1>
-            <p>A collection of beautiful memories</p>
-        </header>
-
-        <div class="gallery-container">
-            <div class="gallery-masonry" id="gallery">
-                <!-- Photo cards will be generated by JS -->
-            </div>
-        </div>
-
-        <div class="action-buttons">
-            <button class="btn" id="celebrate-btn">
-                🎆 Celebrate
-            </button>
-        </div>
+<body class="bg-black text-white overflow-hidden">
+    
+    <canvas id="fireworks-canvas" class="fixed top-0 left-0 w-full h-full z-0"></canvas>
+    
+    <div id="text-container" class="absolute top-8 left-8 z-10">
+        <h1 id="main-title" class="text-4xl md:text-5xl font-bold mb-2 text-gradient">Keep Smiling Bright</h1>
+        <p id="subtitle" class="text-lg md:text-xl font-light text-purple-300" style="text-shadow: 0 0 10px rgba(192, 132, 252, 0.5);">A little something to make you smile</p>
     </div>
 
-    <!-- Fullscreen Modal -->
-    <div id="fullscreen-modal" class="fullscreen-modal">
-        <div class="fullscreen-content">
-            <span class="fullscreen-close">&times;</span>
-            <img id="fullscreen-image" class="fullscreen-image" src="" alt="Fullscreen Memory">
-        </div>
-    </div>
-
-    <!-- Fireworks -->
-    <div class="fireworks-overlay" id="fireworks-overlay">
-        <canvas id="fireworks-canvas"></canvas>
-        <div class="fireworks-controls">
-            <button class="btn" id="more-fireworks-btn">🎆 More Fireworks</button>
-            <button class="btn" id="end-show-btn">End Show</button>
-        </div>
+    <div class="fixed bottom-5 left-1/2 -translate-x-1/2 md:bottom-10 md:right-10 md:left-auto md:translate-x-0 z-20">
+        <button id="more-fireworks-btn" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:scale-105 transform transition-transform duration-300 flex items-center gap-2" aria-label="Launch more fireworks">
+            <span role="img" aria-hidden="true">🎆</span> More Fireworks
+        </button>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // --- DOM Elements ---
-            const gallery = document.getElementById('gallery');
-            const celebrateBtn = document.getElementById('celebrate-btn');
-            const mainContainer = document.getElementById('main-container');
-
-            // Modal elements
-            const modal = document.getElementById('fullscreen-modal');
-            const modalImage = document.getElementById('fullscreen-image');
-            const modalCloseBtn = modal.querySelector('.fullscreen-close');
-
-            // Fireworks elements
-            const fireworksOverlay = document.getElementById('fireworks-overlay');
             const canvas = document.getElementById('fireworks-canvas');
-            const ctx = canvas.getContext('2d');
-            const moreFireworksBtn = document.getElementById('more-fireworks-btn');
-            const endShowBtn = document.getElementById('end-show-btn');
+            if (!canvas) return;
 
-            // --- App State ---
-            let photos = [];
-            let selectedPhotoSrc = null;
-            let fireworksActive = false;
-            let animationFrameId;
-            let fireworksInterval;
+            const ctx = canvas.getContext('2d');
             let fireworks = [];
             let particles = [];
-            const TOTAL_IMAGES = 40;
+            let fireworksInterval;
 
-            // --- Photo Service Logic ---
-            const generatePhotos = (count) => {
-                const generatedPhotos = [];
-                for (let i = 1; i <= count; i++) {
-                    generatedPhotos.push({
-                        id: i,
-                        src: `./imgs/${i}.JPG`,
-                    });
-                }
-                return generatedPhotos;
+            const resizeCanvas = () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
             };
 
-            // --- Gallery Generation ---
-            function generateGallery() {
-                gallery.innerHTML = ''; // Clear previous content
-                photos.forEach((photo, index) => {
-                    const card = document.createElement('div');
-                    card.className = 'photo-card';
-                    card.style.animationDelay = `${(index % 10) * 0.1}s`;
-                    
-                    const placeholder = document.createElement('div');
-                    placeholder.className = 'loading-placeholder';
-                    // Use a default aspect ratio for the placeholder to minimize layout shift
-                    placeholder.style.paddingTop = `75%`; // 4:3 aspect ratio
-                    
-                    const img = document.createElement('img');
-                    img.src = photo.src;
-                    img.alt = `Memory ${photo.id}`;
-                    img.style.display = 'none';
-
-                    img.onload = () => {
-                        placeholder.style.display = 'none';
-                        img.style.display = 'block';
-                    };
-
-                    img.onerror = () => {
-                        // Hide the card if the image fails to load
-                        card.style.display = 'none';
-                    };
-                    
-                    card.appendChild(placeholder);
-                    card.appendChild(img);
-                    
-                    card.addEventListener('click', () => {
-                        if (!fireworksActive) {
-                            openModal(photo.src);
-                        }
-                    });
-                    gallery.appendChild(card);
-                });
-            }
-
-            // --- Modal Logic ---
-            function openModal(src) {
-                selectedPhotoSrc = src;
-                modalImage.src = src;
-                modal.classList.add('show');
-            }
-
-            function closeModal() {
-                selectedPhotoSrc = null;
-                modal.classList.remove('show');
-            }
-
-            // --- Fireworks Logic ---
             class Particle {
                 constructor(x, y, hue) {
                     this.x = x;
                     this.y = y;
-                    this.coordinates = Array(5).fill([x, y]);
+                    this.coordinates = Array(10).fill([x, y]);
                     this.angle = Math.random() * Math.PI * 2;
-                    this.speed = Math.random() * 10 + 4;
-                    this.friction = 0.96;
-                    this.gravity = 1.0;
+                    this.speed = Math.random() * 20 + 5;
+                    this.friction = 0.94;
+                    this.gravity = 0.8;
                     this.hue = Math.random() * 60 + hue;
                     this.brightness = Math.random() * 50 + 50;
                     this.alpha = 1;
-                    this.decay = Math.random() * 0.015 + 0.01;
-                    this.size = Math.random() * 3 + 1.5;
+                    this.decay = Math.random() * 0.015 + 0.005;
+                    this.size = Math.random() * 4 + 2;
+                    this.sparkle = Math.random() > 0.5;
                 }
+
                 update() {
                     this.coordinates.pop();
                     this.coordinates.unshift([this.x, this.y]);
@@ -456,7 +113,8 @@
                     this.y += Math.sin(this.angle) * this.speed + this.gravity;
                     this.alpha -= this.decay;
                 }
-                draw(ctx) {
+
+                draw() {
                     ctx.save();
                     ctx.globalAlpha = this.alpha;
                     ctx.beginPath();
@@ -465,6 +123,16 @@
                     ctx.strokeStyle = `hsl(${this.hue}, 100%, ${this.brightness}%)`;
                     ctx.lineWidth = this.size;
                     ctx.stroke();
+                    
+                    if (this.sparkle) {
+                        ctx.shadowBlur = 30;
+                        ctx.shadowColor = `hsl(${this.hue}, 100%, ${this.brightness}%)`;
+                    }
+                    
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size / 2, 0, Math.PI * 2);
+                    ctx.fillStyle = `hsl(${this.hue}, 100%, ${this.brightness}%)`;
+                    ctx.fill();
                     ctx.restore();
                 }
             }
@@ -475,45 +143,48 @@
                     this.y = y;
                     this.targetY = targetY;
                     this.coordinates = Array(5).fill([x, y]);
-                    this.speed = Math.random() * 4 + 8;
+                    this.speed = Math.random() * 5 + 10;
                     this.acceleration = 0.98;
                     this.brightness = Math.random() * 50 + 50;
                     const colors = [0, 30, 60, 120, 180, 240, 280, 320];
                     this.hue = colors[Math.floor(Math.random() * colors.length)];
                 }
+
                 update() {
                     this.coordinates.pop();
                     this.coordinates.unshift([this.x, this.y]);
                     this.speed *= this.acceleration;
                     this.y -= this.speed;
                 }
-                draw(ctx) {
+
+                draw() {
                     ctx.beginPath();
                     ctx.moveTo(this.coordinates[this.coordinates.length - 1][0], this.coordinates[this.coordinates.length - 1][1]);
                     ctx.lineTo(this.x, this.y);
                     ctx.strokeStyle = `hsl(${this.hue}, 100%, ${this.brightness}%)`;
-                    ctx.lineWidth = 2;
+                    ctx.lineWidth = 3;
                     ctx.stroke();
+
                     ctx.beginPath();
-                    ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
+                    ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
                     ctx.fillStyle = `hsl(${this.hue}, 100%, 80%)`;
                     ctx.fill();
                 }
             }
-
-            const launchFireworksBurst = () => {
-                if (!canvas) return;
-                const burstCount = 5 + Math.floor(Math.random() * 3);
+            
+            const launchFireworksBurst = (count = 5) => {
+                const burstCount = count + Math.floor(Math.random() * 3);
                 for (let i = 0; i < burstCount; i++) {
                     setTimeout(() => {
-                        const startX = Math.random() * (canvas.width - 100) + 50;
-                        const targetY = Math.random() * (canvas.height * 0.15) + (canvas.height * 0.10);
+                        const startX = Math.random() * (canvas.width * 0.8) + (canvas.width * 0.1);
+                        const targetY = Math.random() * (canvas.height * 0.2) + (canvas.height * 0.1);
                         fireworks.push(new Firework(startX, canvas.height, targetY));
-                    }, i * (150 + Math.random() * 200));
+                    }, i * (150 + Math.random() * 150));
                 }
             };
-            
-            function animateFireworks() {
+
+            const animate = () => {
+                requestAnimationFrame(animate);
                 ctx.globalCompositeOperation = 'destination-out';
                 ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -521,9 +192,9 @@
 
                 fireworks = fireworks.filter(firework => {
                     firework.update();
-                    firework.draw(ctx);
+                    firework.draw();
                     if (firework.y <= firework.targetY || firework.speed <= 1) {
-                        let particleCount = 50;
+                        let particleCount = 100 + Math.floor(Math.random() * 50);
                         while (particleCount--) {
                             particles.push(new Particle(firework.x, firework.y, firework.hue));
                         }
@@ -534,109 +205,76 @@
 
                 particles = particles.filter(particle => {
                     particle.update();
-                    particle.draw(ctx);
+                    particle.draw();
                     return particle.alpha > particle.decay;
                 });
-
-                animationFrameId = requestAnimationFrame(animateFireworks);
-            }
-
-            function startFireworks() {
-                if (fireworksActive) return;
-                fireworksActive = true;
-                
-                if (selectedPhotoSrc) closeModal();
-
-                mainContainer.classList.add('fireworks-active');
-                celebrateBtn.disabled = true;
-                fireworksOverlay.classList.add('active');
-
-                resizeCanvas();
-                fireworks = [];
-                particles = [];
-                
-                animateFireworks();
-                launchFireworksBurst(); // Initial burst
-
-                fireworksInterval = setInterval(() => {
-                    if (Math.random() > 0.4) {
-                        const count = 1 + Math.floor(Math.random() * 2);
-                        for (let i = 0; i < count; i++) {
-                            setTimeout(() => {
-                                const startX = Math.random() * (canvas.width - 100) + 50;
-                                const targetY = Math.random() * (canvas.height * 0.15) + (canvas.height * 0.10);
-                                fireworks.push(new Firework(startX, canvas.height, targetY));
-                            }, i * 200);
+            };
+            
+            const initInteractiveText = () => {
+                const wrapTextInSpans = (elementId) => {
+                    const element = document.getElementById(elementId);
+                    if (!element) return;
+                    const text = element.textContent.trim();
+                    element.innerHTML = ''; // Clear existing content
+                    text.split('').forEach(char => {
+                        const span = document.createElement('span');
+                        if (char === ' ') {
+                            span.innerHTML = '&nbsp;'; // Use non-breaking space
+                        } else {
+                            span.textContent = char;
                         }
-                    }
-                }, 1200 + Math.random() * 1200);
+                        element.appendChild(span);
+                    });
+                };
 
-                // Auto-end after 30 seconds
-                setTimeout(() => {
-                    if (fireworksActive) endFireworks();
-                }, 30000);
-            }
+                wrapTextInSpans('main-title');
+                wrapTextInSpans('subtitle');
 
-            function endFireworks() {
-                fireworksActive = false;
-                mainContainer.classList.remove('fireworks-active');
-                celebrateBtn.disabled = false;
-                fireworksOverlay.classList.remove('active');
-                
-                if (animationFrameId) cancelAnimationFrame(animationFrameId);
-                if (fireworksInterval) clearInterval(fireworksInterval);
-
-                // Fade out canvas
-                setTimeout(() => ctx.clearRect(0, 0, canvas.width, canvas.height), 2000);
-            }
-
-            // --- Event Listeners ---
-            celebrateBtn.addEventListener('click', startFireworks);
-            moreFireworksBtn.addEventListener('click', launchFireworksBurst);
-            endShowBtn.addEventListener('click', endFireworks);
-            
-            modalCloseBtn.addEventListener('click', closeModal);
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) closeModal();
-            });
-
-            document.addEventListener('keydown', (e) => {
-                if (fireworksActive) {
-                    if (e.code === 'Space') {
-                        e.preventDefault();
-                        launchFireworksBurst();
-                    } else if (e.key === 'Escape') {
-                        endFireworks();
-                    }
-                } else if (selectedPhotoSrc) {
-                    if (e.key === 'Escape') {
-                        closeModal();
-                    }
-                } else {
-                    if (e.code === 'Space') {
-                        e.preventDefault();
-                        startFireworks();
-                    }
-                }
-            });
-            
-            const resizeCanvas = () => {
-                if (canvas) {
-                    canvas.width = window.innerWidth;
-                    canvas.height = window.innerHeight;
+                const textContainer = document.getElementById('text-container');
+                // Only apply parallax effect on devices that support hover (non-touch)
+                if (textContainer && window.matchMedia('(pointer: fine)').matches) {
+                    document.addEventListener('mousemove', (e) => {
+                        const { clientX, clientY } = e;
+                        const { innerWidth, innerHeight } = window;
+                        const moveX = (clientX / innerWidth - 0.5) * 40; // max move 20px
+                        const moveY = (clientY / innerHeight - 0.5) * 40; // max move 20px
+                        textContainer.style.transform = `translate(${moveX}px, ${moveY}px)`;
+                    });
                 }
             };
+
+            const startShow = () => {
+                resizeCanvas();
+                animate();
+                launchFireworksBurst(8); // Initial burst
+
+                fireworksInterval = window.setInterval(() => {
+                    if (Math.random() > 0.3) {
+                        const count = 1 + Math.floor(Math.random() * 3);
+                         for (let i = 0; i < count; i++) {
+                            setTimeout(() => {
+                                const startX = Math.random() * (canvas.width * 0.8) + (canvas.width * 0.1);
+                                const targetY = Math.random() * (canvas.height * 0.2) + (canvas.height * 0.1);
+                                fireworks.push(new Firework(startX, canvas.height, targetY));
+                            }, i * 250);
+                        }
+                    }
+                }, 1500 + Math.random() * 1500);
+            };
+
+            // Event Listeners
             window.addEventListener('resize', resizeCanvas);
+            document.getElementById('more-fireworks-btn').addEventListener('click', () => launchFireworksBurst(5));
+            document.addEventListener('keydown', (e) => {
+                if (e.code === 'Space') {
+                    e.preventDefault();
+                    launchFireworksBurst(5);
+                }
+            });
 
-            // --- Initialization ---
-            function init() {
-                photos = generatePhotos(TOTAL_IMAGES);
-                generateGallery();
-            }
-
-
-
-            init();
+            // Init
+            startShow();
+            initInteractiveText();
         });
     </script>
 </body>
