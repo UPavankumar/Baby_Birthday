@@ -1,19 +1,19 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>For my baby ✨</title>
+    <title>Fireworks ✨</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💖</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat+Alternates:wght@300&display=swap" rel="stylesheet">
     <style>
         body {
             cursor: default;
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Montserrat Alternates', sans-serif;
+            font-weight: 300;
         }
 
         #text-container {
@@ -22,16 +22,16 @@
         }
         
         #main-title {
-            font-family: 'Pacifico', cursive;
-            text-shadow: 0 3px 5px rgba(0,0,0,0.5), 0 0 15px rgba(248, 113, 113, 0.3);
+            font-family: 'Great Vibes', cursive;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.2), 0 0 15px rgba(255, 192, 203, 0.4), 0 0 30px rgba(192, 132, 252, 0.3);
         }
         
         #subtitle {
-             text-shadow: 0 2px 4px rgba(0,0,0,0.4), 0 0 10px rgba(192, 132, 252, 0.4);
+             text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
         }
 
         .text-gradient {
-            background: linear-gradient(45deg, #f87171, #fb923c, #facc15, #4ade80, #60a5fa, #c084fc, #f87171);
+            background: linear-gradient(45deg, #c084fc, #f687b3, #fbb67b);
             background-size: 200% 200%;
             -webkit-background-clip: text;
             background-clip: text;
@@ -48,26 +48,32 @@
         #text-container span {
             display: inline-block;
             cursor: pointer;
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.3s ease, text-shadow 0.3s ease;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.3s ease, text-shadow 0.3s ease;
             will-change: transform, color, text-shadow;
         }
 
         #text-container span:hover {
-            transform: translateY(-8px) scale(1.1);
+            transform: translateY(-6px) scale(1.05);
             color: #fff;
-            text-shadow: 0 0 15px rgba(255, 255, 255, 0.8), 0 0 25px rgba(255, 255, 255, 0.6);
+            text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 40px #f0abfc;
         }
 
         /* Mobile specific styles */
         @media (max-width: 768px) {
             #text-container {
                 /* Center text on mobile */
-                top: 5rem;
+                top: 4rem;
                 left: 50%;
                 transform: translateX(-50%);
                 width: 90%;
                 text-align: center;
                 transition: none;
+            }
+            #main-title {
+                font-size: 3.25rem; /* Slightly smaller on mobile */
+            }
+            #subtitle {
+                font-size: 1.1rem; /* Slightly smaller on mobile */
             }
         }
     </style>
@@ -77,12 +83,12 @@
     <canvas id="fireworks-canvas" class="fixed top-0 left-0 w-full h-full z-0"></canvas>
     
     <div id="text-container" class="absolute top-8 left-8 z-10">
-        <h1 id="main-title" class="text-4xl sm:text-5xl md:text-6xl font-bold mb-2 text-gradient">Keep Smiling Bright</h1>
-        <p id="subtitle" class="text-lg sm:text-xl md:text-2xl font-light text-purple-300">A little something to make you smile</p>
+        <h1 id="main-title" class="text-5xl sm:text-6xl md:text-7xl font-bold mb-4 text-gradient">You're my firework</h1>
+        <p id="subtitle" class="text-lg sm:text-xl md:text-2xl font-light text-pink-200">Lighting up my world, always.</p>
     </div>
 
-    <div class="fixed bottom-5 left-1/2 -translate-x-1/2 md:bottom-10 md:right-10 md:left-auto md:translate-x-0 z-20">
-        <button id="more-fireworks-btn" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:scale-105 transform transition-transform duration-300 flex items-center gap-2" aria-label="Launch more fireworks">
+    <div class="fixed bottom-8 left-1/2 -translate-x-1/2 md:bottom-10 md:right-10 md:left-auto md:translate-x-0 z-20">
+        <button id="more-fireworks-btn" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:scale-105 active:scale-95 transform transition-transform duration-300 flex items-center gap-2" aria-label="Launch more fireworks">
             <span role="img" aria-hidden="true">🎆</span> More Fireworks
         </button>
     </div>
@@ -96,6 +102,7 @@
             let fireworks = [];
             let particles = [];
             let fireworksInterval;
+            const isMobile = window.innerWidth < 768;
 
             const resizeCanvas = () => {
                 canvas.width = window.innerWidth;
@@ -131,7 +138,7 @@
                     this.alpha = 1;
                     this.decay = Math.random() * 0.02 + 0.008; // Randomized decay
                     this.size = Math.random() * 5 + 1; // Randomized size
-                    this.sparkle = Math.random() > 0.5;
+                    this.sparkle = !isMobile && Math.random() > 0.5; // Disable performance-heavy sparkle on mobile
                 }
 
                 update() {
@@ -222,7 +229,8 @@
                     firework.update();
                     firework.draw();
                     if (firework.y <= firework.targetY || firework.speed <= 1) {
-                        let particleCount = 80 + Math.floor(Math.random() * 120);
+                        // Reduce particle count on mobile for performance
+                        let particleCount = isMobile ? 40 + Math.floor(Math.random() * 60) : 80 + Math.floor(Math.random() * 120);
                         const isRainbow = Math.random() < 0.15; // 15% chance for a rainbow burst
                         while (particleCount--) {
                             particles.push(new Particle(firework.x, firework.y, isRainbow ? null : firework.hue));
@@ -248,7 +256,7 @@
                     text.split('').forEach(char => {
                         const span = document.createElement('span');
                         if (char === ' ') {
-                            span.innerHTML = '&nbsp;'; // Use non-breaking space
+                            span.innerHTML = '&nbsp;'; // Use non-breaking space for multiple spaces
                         } else {
                             span.textContent = char;
                         }
@@ -275,11 +283,14 @@
             const startShow = () => {
                 resizeCanvas();
                 animate();
-                launchFireworksBurst(8); // Initial burst
+                launchFireworksBurst(isMobile ? 4 : 8); // Smaller initial burst on mobile
+
+                // Launch fireworks less frequently on mobile
+                const intervalTime = isMobile ? 2500 + Math.random() * 2000 : 1500 + Math.random() * 1500;
 
                 fireworksInterval = window.setInterval(() => {
                     if (Math.random() > 0.3) {
-                        const count = 1 + Math.floor(Math.random() * 3);
+                        const count = 1 + Math.floor(Math.random() * (isMobile ? 2 : 3));
                          for (let i = 0; i < count; i++) {
                             setTimeout(() => {
                                 const startX = getRandomStartX();
@@ -288,7 +299,7 @@
                             }, i * 250);
                         }
                     }
-                }, 1500 + Math.random() * 1500);
+                }, intervalTime);
             };
 
             // Event Listeners
